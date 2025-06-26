@@ -1,50 +1,31 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder);
-  private auth = inject(Auth);
-  private router = inject(Router);
+  userId: string = '';
+  password: string = '';
 
-  loginForm = this.fb.group({
-    mitarbeiternummer: ['', [Validators.required]],
-    passwort: ['', [Validators.required]]
-  });
+  constructor(private auth: Auth, private router: Router) {}
 
   async login() {
-    const mitarbeiterId = this.loginForm.value.mitarbeiternummer;
-    const password = this.loginForm.value.passwort;
-
-    if (!mitarbeiterId || !password) {
-      alert('Bitte alle Felder ausfüllen.');
-      return;
-    }
-
-    const pseudoEmail = `${mitarbeiterId}@firma.de`;
+    const fakeEmail = `${this.userId}@firma.de`; // Workaround
 
     try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, pseudoEmail, password);
-      const user = userCredential.user;
-
-      // Hier kannst du basierend auf der UID oder Custom Claims weiterleiten
-      if (user.email?.startsWith('admin')) {
-        this.router.navigate(['/admin-dashboard']);
-      } else {
-        this.router.navigate(['/mitarbeiter-dashboard']);
-      }
-    } catch (error) {
-      console.error('Login fehlgeschlagen:', error);
-      alert('Login fehlgeschlagen. Bitte prüfe die Angaben.');
+      await signInWithEmailAndPassword(this.auth, fakeEmail, this.password);
+      this.router.navigate(['/dashboard']); // z. B. Startseite nach Login
+    } catch (err: any) {
+      console.error('Login fehlgeschlagen:', err);
+      alert(`Login fehlgeschlagen: ${err.code || err.message}`);
     }
+
   }
 }

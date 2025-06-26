@@ -1,0 +1,39 @@
+<header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+  <div class="font-bold text-xl">Kanzler Admin</div>
+
+  <nav class="flex items-center space-x-6">
+    <a routerLink="calendar" routerLinkActive="underline">Kalender</a>
+
+    @if (isAdmin()) {
+      <a routerLink="orders" routerLinkActive="underline">Aufträge</a>
+
+      <div class="relative group">
+        <button class="hover:underline">Mitarbeiter</button>
+        <div class="absolute hidden group-hover:block bg-white text-black mt-1 p-2 rounded shadow-md z-10">
+          @for (item of adminMitarbeiterLinks; track item) {
+            <a  class="block px-2 py-1 hover:bg-gray-200">{{ item.label }}</a>
+          }
+        </div>
+      </div>
+
+      <a routerLink="storage" routerLinkActive="underline">Lager</a>
+    }
+
+    @if (isEmployee()) {
+      <div class="relative group">
+        <button class="hover:underline">Mitarbeiter</button>
+        <div class="absolute hidden group-hover:block bg-white text-black mt-1 p-2 rounded shadow-md z-10">
+          @for (item of employeeLinks; track item) {
+            <a  class="block px-2 py-1 hover:bg-gray-200">{{ item.label }}</a>
+          }
+        </div>
+      </div>
+    }
+
+    <a (click)="logout()" class="text-red-300 hover:underline cursor-pointer">Logout</a>
+  </nav>
+</header>
+
+<main class="p-6">
+  <router-outlet />
+</main>

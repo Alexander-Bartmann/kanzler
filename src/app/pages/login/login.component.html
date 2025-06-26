@@ -1,11 +1,16 @@
-<div class="login-container">
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
+<div class="flex flex-col items-center justify-center h-screen bg-black">
+  <img src="img/" alt="">
+  <form (ngSubmit)="login()" class="bg-orange-400 p-8 rounded shadow-md w-96">
+    <h2 class="text-xl mb-4 font-bold text-center">Login</h2>
+
     <label>Mitarbeiternummer</label>
-    <input type="text" formControlName="mitarbeiternummer" />
+    <input [(ngModel)]="userId" name="userId" required class="border p-2 w-full mb-4"/>
 
     <label>Passwort</label>
-    <input type="password" formControlName="passwort" />
+    <input [(ngModel)]="password" name="password" type="password" required class="border p-2 w-full mb-6"/>
 
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full">
+      Login
+    </button>
   </form>
 </div>
