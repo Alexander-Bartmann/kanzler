@@ -1,9 +1,6 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { Auth, signOut, User as FirebaseUser, onAuthStateChanged } from '@angular/fire/auth';
-import { Firestore, collection, collectionData, doc, docData } from '@angular/fire/firestore';
-import { query, where } from '@angular/fire/firestore';
-import { getDocs } from 'firebase/firestore'; // diesen kannst du vorerst behalten
-
+import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -12,22 +9,20 @@ export class UserService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
 
-  userData = signal<any | null>(null);  // Signal für einfache Verwendung in Templates
+  userData = signal<any | null>(null);
 
   constructor() {
     onAuthStateChanged(this.auth, async (user: FirebaseUser | null) => {
       if (user) {
-        const q = query(
-          collection(this.firestore, 'users'),
-          where('uid', '==', user.uid)
-        );
-
+        // Suche nach User-Dokument anhand der E-Mail
+        const usersRef = collection(this.firestore, 'users');
+        const q = query(usersRef, where('email', '==', user.email));
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
-          const userDoc = querySnapshot.docs[0].data();
-          this.userData.set({ uid: user.uid, ...userDoc });
+          const userDoc = querySnapshot.docs[0];
+          this.userData.set({ id: userDoc.id, ...userDoc.data() });
         } else {
-          console.warn('Kein Benutzer mit dieser UID gefunden');
+          console.warn('Kein Benutzer mit dieser E-Mail gefunden');
           this.userData.set(null);
         }
       } else {

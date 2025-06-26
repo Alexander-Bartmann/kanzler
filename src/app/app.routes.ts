@@ -16,7 +16,13 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard],
     children: [
-
+      {
+        path: 'calendar',
+        loadComponent: () =>
+          import('./pages/calendar.component').then(m => m.CalendarComponent),
+      },
+      // weitere Child-Routen hier
+      { path: '', redirectTo: 'calendar', pathMatch: 'full' }
     ]
-  }
+  },
 ];

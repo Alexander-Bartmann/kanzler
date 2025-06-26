@@ -1,8 +1,10 @@
-<header class="bg-blue-600 text-white p-4 flex justify-between items-center">
-  <div class="font-bold text-xl">Kanzler Admin</div>
+<header class="bg-black text-orange-400 p-4 flex justify-between items-center">
+  <div class="font-bold text-xl">
+    <img src="assets/img/Kanzler-Icon.png" alt="" class="h-14 w-auto" />
+  </div>
 
   <nav class="flex items-center space-x-6">
-    <a routerLink="calendar" routerLinkActive="underline">Kalender</a>
+    <a routerLink="calendar" routerLinkActive="underline" class="cursor-pointer">Kalender</a>
 
     @if (isAdmin()) {
       <a routerLink="orders" routerLinkActive="underline">Aufträge</a>
